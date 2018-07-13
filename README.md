@@ -9,7 +9,7 @@ AWS provides detailed cost and usage reports in csv format to the master account
 
 The processing account has the following setup:
 
-![Image](https://github.com/telia-oss/terraform-aws-cost-and-usage-reports/tree/master/images/arch.svg)
+![Image](https://raw.githubusercontent.com/telia-oss/terraform-aws-cost-and-usage-reports/master/images/arch.svg?sanitize=true)
 
 When AWS put a new file the cost and report bucket an event is created that triggered the manifest processor lambda function which processes the `Manifest.json` file. Since AWS does not overwrite existing reports when they are updated, the manifest contains a list of `ReportKeys` which are files that should be processed. It then cleans the destination bucket for the period specified in the manifest and then triggers a csv processor lambda function for each of these files.
 
