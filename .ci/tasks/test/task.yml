@@ -1,0 +1,19 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: teliaoss/concourse-awscli
+
+params:
+  directory:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  AWS_SESSION_TOKEN:
+
+inputs:
+  - name: secret-source
+  - name: terraform-out
+
+run:
+  path: secret-source/.ci/tasks/test/task.sh

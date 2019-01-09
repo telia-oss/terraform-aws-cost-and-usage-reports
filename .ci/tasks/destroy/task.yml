@@ -1,0 +1,19 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: hashicorp/terraform
+    tag: "0.11.11"
+
+params:
+  directory:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  AWS_SESSION_TOKEN:
+
+inputs:
+  - name: secret-source
+
+run:
+  path: secret-source/.ci/tasks/destroy/task.sh
