@@ -18,13 +18,36 @@ provider "aws" {
   allowed_account_ids = ["<test-account-id>"]
 }
 
+locals {
+  name_prefix = "test-defualt-cost-and-usage"
+}
+
 data "aws_caller_identity" "current" {}
+
+resource "aws_s3_bucket" "lambda_deployment_bucket" {
+  bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
+  acl    = "private"
+
+  versioning {
+    enabled = true
+  }
+
+  tags = {
+    terraform   = "True"
+    environment = "prod"
+  }
+}
+
+output "lambda_deployment_bucket" {
+  value = "${aws_s3_bucket.lambda_deployment_bucket.id}"
+}
 
 module "cost_and_usage_report" {
   source = "../../"
 
-  report_bucket = "${data.aws_caller_identity.current.account_id}-reports-bucket"
-  source_bucket = "${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
+  name_prefix   = "${local.name_prefix}"
+  report_bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-reports-bucket"
+  source_bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
 
   tags = {
     terraform   = "True"

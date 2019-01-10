@@ -29,45 +29,13 @@ jobs:
           AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
         file: this-module/.ci/tasks/destroy/task.yml
 
-  - name: test-deploy-bucket
-    plan:
-      - aggregate:
-          - get: this-module
-            trigger: true
-            passed:
-              - test-default
-      - task: apply
-        params:
-          directory: deploy-bucket
-          AWS_ACCOUNT_ID: ((telia-divx-common-services-stage-account-id))
-          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
-          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
-          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
-          KMS_KEY_ID: ((telia-divx-common-services-stage-state-bucket-key))
-        file: this-module/.ci/tasks/apply/task.yml
-        input_mapping: {source: this-module}
-      - task: test
-        params:
-          directory: deploy-bucket
-          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
-          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
-          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
-        file: this-module/.ci/tasks/test/task.yml
-      - task: destroy
-        params:
-          directory: deploy-bucket
-          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
-          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
-          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
-        file: this-module/.ci/tasks/destroy/task.yml
-
   - name: test-report-forwarding
     plan:
       - aggregate:
           - get: this-module
             trigger: true
             passed:
-              - test-deploy-bucket
+              - test-default
       - task: apply
         params:
           directory: report-forwarding

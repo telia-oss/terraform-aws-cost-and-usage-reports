@@ -142,12 +142,6 @@ data "aws_iam_policy_document" "bucket_forwarder_assume" {
   }
 }
 
-resource "aws_iam_role_policy" "bucket_forwarder" {
-  name   = "${var.prefix}-bucket-forwarder-lambda-privileges"
-  role   = "${aws_iam_role.bucket_forwarder.name}"
-  policy = "${data.aws_iam_policy_document.bucket_forwarder.json}"
-}
-
 data "aws_iam_policy_document" "bucket_forwarder" {
   statement {
     effect = "Allow"
