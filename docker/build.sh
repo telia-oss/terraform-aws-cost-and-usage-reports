@@ -35,6 +35,5 @@ echo "Adding lib64/python2.7/site-packages/ to environment.zip"
 pushd $VIRTUAL_ENV/lib64/python2.7/site-packages/
 zip -r -9 /tmp/environment.zip *
 popd
-
-mv /tmp/environment.zip ../../dist
+mv /tmp/environment.zip source/dist/
 echo "Saved to environment.zip to dist"
