@@ -41,17 +41,6 @@ jobs:
         params:
           directory: default
           AWS_ACCOUNT_ID: ((telia-divx-common-services-stage-account-id))
-          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
-          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
-          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
-          KMS_KEY_ID: ((telia-divx-common-services-stage-state-bucket-key))
-        file: this-module/.ci/tasks/inject-secrets/task.yml
-        input_mapping: {source: this-module}
-        output_mapping: {secret-source: source}
-      - task: inject-secrets
-        params:
-          directory: deploy-bucket
-          AWS_ACCOUNT_ID: ((telia-divx-common-services-stage-account-id))
           KMS_KEY_ID: ((telia-divx-common-services-stage-state-bucket-key))
         file: this-module/.ci/tasks/inject-secrets/task.yml
         input_mapping: {source: this-module}
@@ -63,7 +52,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
           AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
         file: this-module/.ci/tasks/apply/task.yml
-        input_mapping: {source: this-module}
       - task: test
         params:
           directory: default

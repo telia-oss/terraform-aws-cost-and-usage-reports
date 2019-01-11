@@ -17,4 +17,4 @@ inputs:
   - name:
 
 run:
-  path: secret-source/.ci/tasks/test/task.sh
+  path: source/.ci/tasks/test/task.sh
