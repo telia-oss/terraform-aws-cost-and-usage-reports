@@ -12,7 +12,7 @@ params:
 
 inputs:
   - name: built-source
-  - name: terraform-out
+  - name: deploy-bucket-terraform-out
 
 run:
   path: built-source/.ci/tasks/deploy-lambdas/task.sh
