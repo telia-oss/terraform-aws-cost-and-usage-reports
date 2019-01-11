@@ -10,7 +10,7 @@ inputs:
   - name: source
 
 outputs:
-  - name: built-lambdas
+  - name: built-source
 
 run:
   path: source/.ci/tasks/build_lambdas/task.sh
