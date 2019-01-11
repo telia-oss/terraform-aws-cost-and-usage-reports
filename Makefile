@@ -68,7 +68,7 @@ build-manifest-processor:
 	zip -9 -j $(DIST_PATH)/manifest_processor.zip src/manifest_processor/lambda.py
 	@echo "√ manifest processor release built"
 
-build-bucket-forwarder: test
+build-bucket-forwarder:
 	@echo "== Build bucket-forwarder =="
 	zip -9 -j $(DIST_PATH)/bucket_forwarder.zip src/bucket_forwarder/lambda.py
 	@echo "√ bucket forwarder release built"
