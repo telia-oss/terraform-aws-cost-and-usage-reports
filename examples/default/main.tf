@@ -39,7 +39,7 @@ resource "aws_s3_bucket" "lambda_deployment_bucket" {
 }
 
 output "lambda_deployment_bucket" {
-  value = "${aws_s3_bucket.lambda_deployment_bucket.id}"
+  value = "${aws_s3_bucket.lambda_deployment_bucket.bucket}"
 }
 
 module "cost_and_usage_report" {

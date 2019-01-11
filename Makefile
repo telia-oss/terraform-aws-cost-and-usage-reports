@@ -54,7 +54,7 @@ build: clean test build-environment build-csv-processor build-manifest-processor
 build-environment:
 	@echo "== Building environment =="
 	mkdir -p dist
-	docker run -v $(DIST_PATH):/dist -v $(DOCKER_PATH):/docker -it $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/bash /docker/build.sh
+	docker run -v $(PWD):/source -it $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/bash source/docker/build.sh
 	@echo "√ Lambda environment built"
 
 build-csv-processor:

@@ -6,15 +6,13 @@ image_resource:
     repository: teliaoss/concourse-awscli
 
 params:
-  directory:
   AWS_ACCESS_KEY_ID:
   AWS_SECRET_ACCESS_KEY:
   AWS_SESSION_TOKEN:
 
 inputs:
-  - name: secret-source
+  - name: built-lamdas
   - name: terraform-out
-  - name:
 
 run:
   path: secret-source/.ci/tasks/test/task.sh

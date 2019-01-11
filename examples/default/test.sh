@@ -13,6 +13,10 @@ fi
 }
 
 export AWS_DEFAULT_REGION=eu-west-1
+# deploy Lambdas
+
+
+
 tests_failed=0
 # Add tests here e.g.
 
