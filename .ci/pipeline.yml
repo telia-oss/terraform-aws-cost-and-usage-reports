@@ -21,7 +21,7 @@ jobs:
         file: this-module/.ci/tasks/apply/task.yml
         output_mapping: {terraform-out: deploy-bucket-terraform-out}
       - task: build-lambdas
-        file: this-module/.ci/task/build_lambdas/task.yml
+        file: this-module/.ci/tasks/build_lambdas/task.yml
         input_mapping: {source: this-module}
       - task: deploy-lambdas
         params:
