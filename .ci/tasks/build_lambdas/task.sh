@@ -1,7 +1,7 @@
 #!/bin/bash
 source/docker/build.sh
 export DIR="${PWD}"
-export DIST_PATH=${DIR}/dest
+export DIST_PATH=${DIR}/source/dest
 cd source
 make build-csv-processor
 make build-manifest-processor
