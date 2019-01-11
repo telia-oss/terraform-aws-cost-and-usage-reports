@@ -12,9 +12,8 @@ params:
   AWS_SESSION_TOKEN:
 
 inputs:
-  - name: secret-source
+  - name: source
   - name: terraform-out
-  - name:
 
 run:
   path: source/.ci/tasks/test/task.sh
