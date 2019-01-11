@@ -22,19 +22,6 @@ locals {
   name_prefix = "test-forwarding-cost-and-usage"
 }
 
-resource "aws_s3_bucket" "lambda_deployment_bucket" {
-  bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  tags = {
-    terraform   = "True"
-    environment = "prod"
-  }
-}
 
 resource "aws_s3_bucket" "first-cost-and-usage-reports-bucket" {
   bucket = "test-report-forwarding-owrughe-bucket-1"
@@ -70,7 +57,7 @@ module "cost_and_usage_report" {
   source = "../../modules/report-forwarding"
 
   report_bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-reports-bucket"
-  source_bucket = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
+  source_bucket = "test-${data.aws_caller_identity.current.account_id}-lambda-deploy-bucket"
 
   destination_buckets = [
     "test-report-forwarding-owrughe-bucket-1",
