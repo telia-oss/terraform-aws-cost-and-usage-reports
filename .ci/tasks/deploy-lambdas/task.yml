@@ -11,8 +11,8 @@ params:
   AWS_SESSION_TOKEN:
 
 inputs:
-  - name: built-lambdas
+  - name: built-source
   - name: terraform-out
 
 run:
-  path: secret-source/.ci/tasks/test/task.sh
+  path: built-source/.ci/tasks/test/task.sh
