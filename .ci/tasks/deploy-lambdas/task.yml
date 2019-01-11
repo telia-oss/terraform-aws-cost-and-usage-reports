@@ -11,7 +11,7 @@ params:
   AWS_SESSION_TOKEN:
 
 inputs:
-  - name: built-lamdas
+  - name: built-lambdas
   - name: terraform-out
 
 run:
