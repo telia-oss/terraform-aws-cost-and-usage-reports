@@ -13,7 +13,7 @@ params:
   AWS_SESSION_TOKEN:
 
 inputs:
-  - name: secret-source
+  - name: source
 
 run:
-  path: secret-source/.ci/tasks/destroy/task.sh
+  path: source/.ci/tasks/destroy/task.sh
