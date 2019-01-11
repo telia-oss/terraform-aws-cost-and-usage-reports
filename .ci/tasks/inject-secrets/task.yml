@@ -19,4 +19,4 @@ outputs:
   - name: terraform-out
 
 run:
-  path: source/.ci/tasks/apply/task.sh
+  path: source/.ci/tasks/inject-secrets/task.sh
