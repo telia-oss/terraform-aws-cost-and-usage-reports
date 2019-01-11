@@ -22,7 +22,6 @@ locals {
   name_prefix = "test-forwarding-cost-and-usage"
 }
 
-
 resource "aws_s3_bucket" "first-cost-and-usage-reports-bucket" {
   bucket = "test-report-forwarding-owrughe-bucket-1"
   acl    = "private"
