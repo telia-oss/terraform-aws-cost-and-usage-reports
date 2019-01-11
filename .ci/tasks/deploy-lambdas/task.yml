@@ -15,4 +15,4 @@ inputs:
   - name: terraform-out
 
 run:
-  path: built-source/.ci/tasks/test/task.sh
+  path: built-source/.ci/tasks/deploy-lambdas/task.sh
