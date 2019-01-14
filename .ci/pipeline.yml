@@ -145,6 +145,6 @@ resources:
     type: git
     source:
       uri: git@github.com:telia-oss/terraform-aws-cost-and-usage-reports.git
-      branch: testing-pipeline
+      branch: master
       private_key: ((aws-common-services-deploy-key))
 
