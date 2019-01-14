@@ -119,6 +119,19 @@ jobs:
         file: this-module/.ci/tasks/inject-secrets/task.yml
         input_mapping: {source: this-module}
         output_mapping: {secret-source: source}
+      - task: get-terraform-out
+        params:
+          directory: deploy-bucket
+          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
+          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
+          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
+        file: this-module/.ci/tasks/terraform-output/task.yml
+      - task: purge-bucket
+        params:
+          AWS_ACCESS_KEY_ID: ((telia-divx-common-services-stage-access-key))
+          AWS_SECRET_ACCESS_KEY: ((telia-divx-common-services-stage-secret-key))
+          AWS_SESSION_TOKEN: ((telia-divx-common-services-stage-session-token))
+        file: this-module/.ci/tasks/purge-bucket/task.yml
       - task: destroy
         params:
           directory: deploy-bucket
