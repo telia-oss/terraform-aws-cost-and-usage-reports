@@ -20,12 +20,13 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# versioning set to false so that bucket can be created and deleted by testing pipeline - recommend setting to true for prod use!
 resource "aws_s3_bucket" "lambda_deployment_bucket" {
   bucket = "test-<test-account-id>-lambda-deploy-bucket"
   acl    = "private"
 
   versioning {
-    enabled = true
+    enabled = false
   }
 
   tags = {
