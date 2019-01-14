@@ -25,10 +25,6 @@ resource "aws_s3_bucket" "lambda_deployment_bucket" {
   bucket = "test-<test-account-id>-lambda-deploy-bucket"
   acl    = "private"
 
-  versioning {
-    enabled = false
-  }
-
   tags = {
     terraform   = "True"
     environment = "prod"
