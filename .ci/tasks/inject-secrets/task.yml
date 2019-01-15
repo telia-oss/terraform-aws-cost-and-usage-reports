@@ -1,0 +1,22 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: alpine
+    tag: "3.8"
+
+params:
+  AWS_ACCOUNT_ID:
+  directory:
+  KMS_KEY_ID:
+
+inputs:
+  - name: source
+
+outputs:
+  - name: secret-source
+  - name: terraform-out
+
+run:
+  path: source/.ci/tasks/inject-secrets/task.sh

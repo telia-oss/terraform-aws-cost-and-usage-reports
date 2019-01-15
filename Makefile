@@ -54,7 +54,7 @@ build: clean test build-environment build-csv-processor build-manifest-processor
 build-environment:
 	@echo "== Building environment =="
 	mkdir -p dist
-	docker run -v $(DIST_PATH):/dist -v $(DOCKER_PATH):/docker -it $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/bash /docker/build.sh
+	docker run -v $(PWD):/source -it $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/bash source/docker/build.sh
 	@echo "√ Lambda environment built"
 
 build-csv-processor:
@@ -68,7 +68,7 @@ build-manifest-processor:
 	zip -9 -j $(DIST_PATH)/manifest_processor.zip src/manifest_processor/lambda.py
 	@echo "√ manifest processor release built"
 
-build-bucket-forwarder: test
+build-bucket-forwarder:
 	@echo "== Build bucket-forwarder =="
 	zip -9 -j $(DIST_PATH)/bucket_forwarder.zip src/bucket_forwarder/lambda.py
 	@echo "√ bucket forwarder release built"

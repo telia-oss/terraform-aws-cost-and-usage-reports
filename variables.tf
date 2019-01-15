@@ -1,4 +1,4 @@
-variable "prefix" {
+variable "name_prefix" {
   description = "Prefix used for resource names."
   default     = "cost-and-usage-report"
 }

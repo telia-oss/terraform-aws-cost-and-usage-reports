@@ -3,3 +3,6 @@
 **/*.tfstate*
 crash.log
 dist
+
+# InteliJ IDE Files
+.idea/

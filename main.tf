@@ -49,7 +49,7 @@ resource "aws_s3_bucket_notification" "cost_and_usage_notification" {
 # ------------------------------------------------------------------------------
 
 resource "aws_sns_topic" "cost_and_usage" {
-  name = "${var.prefix}-topic"
+  name = "${var.name_prefix}-topic"
 }
 
 resource "aws_sns_topic_policy" "cost_and_usage" {
@@ -90,12 +90,12 @@ data "aws_iam_policy_document" "cost_and_usage_topic_policy" {
 # ------------------------------------------------------------------------------
 
 resource "aws_glue_catalog_database" "aws_glue_catalog_database" {
-  name = "${var.prefix}"
+  name = "${var.name_prefix}"
 }
 
 // TODO: RENAME
 resource "aws_iam_role" "glue" {
-  name = "${var.prefix}-role"
+  name = "${var.name_prefix}-role"
 
   assume_role_policy = <<EOF
 {
@@ -145,7 +145,7 @@ EOF
 
 resource "aws_glue_crawler" "glue_crawler" {
   database_name = "${aws_glue_catalog_database.aws_glue_catalog_database.name}"
-  name          = "${var.prefix}-crawler"
+  name          = "${var.name_prefix}-crawler"
   role          = "${aws_iam_role.glue.id}"
 
   s3_target {
@@ -163,7 +163,7 @@ data "aws_s3_bucket_object" "manifest_processor" {
 }
 
 resource "aws_lambda_function" "manifest_processor" {
-  function_name     = "${var.prefix}-manifest-processor-function"
+  function_name     = "${var.name_prefix}-manifest-processor-function"
   description       = "Lambda function."
   handler           = "lambda.lambda_handler"
   runtime           = "python2.7"
@@ -177,7 +177,7 @@ resource "aws_lambda_function" "manifest_processor" {
   environment {
     variables = {
       CSV_PROCESSOR_LAMBDA = "${aws_lambda_function.csv_processor.function_name}"
-      GLUE_CRAWLER         = "${var.prefix}-crawler"
+      GLUE_CRAWLER         = "${var.name_prefix}-crawler"
     }
   }
 
@@ -185,7 +185,7 @@ resource "aws_lambda_function" "manifest_processor" {
 }
 
 resource "aws_iam_role" "manifest_processor" {
-  name               = "${var.prefix}-manifest-processor-lambda-role"
+  name               = "${var.name_prefix}-manifest-processor-lambda-role"
   assume_role_policy = "${data.aws_iam_policy_document.manifest_processor_assume.json}"
 }
 
@@ -202,7 +202,7 @@ data "aws_iam_policy_document" "manifest_processor_assume" {
 }
 
 resource "aws_iam_role_policy" "manifest_processor" {
-  name   = "${var.prefix}-manifest-processor-lambda-privileges"
+  name   = "${var.name_prefix}-manifest-processor-lambda-privileges"
   role   = "${aws_iam_role.manifest_processor.name}"
   policy = "${data.aws_iam_policy_document.manifest_processor.json}"
 }
@@ -296,7 +296,7 @@ data "aws_s3_bucket_object" "csv_processor" {
 }
 
 resource "aws_lambda_function" "csv_processor" {
-  function_name     = "${var.prefix}-csv-processor-function"
+  function_name     = "${var.name_prefix}-csv-processor-function"
   description       = "Lambda function."
   handler           = "lambda.lambda_handler"
   runtime           = "python2.7"
@@ -311,7 +311,7 @@ resource "aws_lambda_function" "csv_processor" {
 }
 
 resource "aws_iam_role" "csv_processor" {
-  name               = "${var.prefix}-csv-processor-lambda-role"
+  name               = "${var.name_prefix}-csv-processor-lambda-role"
   assume_role_policy = "${data.aws_iam_policy_document.csv_processor_assume.json}"
 }
 
@@ -328,7 +328,7 @@ data "aws_iam_policy_document" "csv_processor_assume" {
 }
 
 resource "aws_iam_role_policy" "csv_processor" {
-  name   = "${var.prefix}-csv-processor-lambda-privileges"
+  name   = "${var.name_prefix}-csv-processor-lambda-privileges"
   role   = "${aws_iam_role.csv_processor.name}"
   policy = "${data.aws_iam_policy_document.csv_processor.json}"
 }
