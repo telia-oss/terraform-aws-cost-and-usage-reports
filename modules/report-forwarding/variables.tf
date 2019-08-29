@@ -23,11 +23,12 @@ variable "aws_billing_account_id" {
 
 variable "destination_buckets" {
   description = "A list of buckets upload reports to."
-  type        = "list"
+  type        = list(string)
 }
 
 variable "tags" {
   description = "A map of tags (key-value pairs) passed to resources."
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
+
