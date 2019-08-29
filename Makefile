@@ -40,7 +40,7 @@ test:
 
 	@for d in $$(find . -type f -name '*.py' -path "./src/*" -exec dirname {} \; | sort -u); do \
 		cd $$d; \
-		pylint *.py &> /dev/null; \
+		pylint *.py; \
 		if [ $$? -ne 0 ]; then \
 			echo "✗ pylint failed: $$d"; \
 			exit 1; \
