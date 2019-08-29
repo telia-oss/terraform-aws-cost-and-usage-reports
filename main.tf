@@ -170,8 +170,8 @@ resource "aws_lambda_function" "manifest_processor" {
   description       = "Lambda function."
   handler           = "lambda.lambda_handler"
   runtime           = "python2.7"
-  memory_size       = "3008"
-  timeout           = "300"
+  memory_size       = 3008
+  timeout           = 300
   s3_bucket         = data.aws_s3_bucket_object.manifest_processor.bucket
   s3_key            = data.aws_s3_bucket_object.manifest_processor.key
   s3_object_version = data.aws_s3_bucket_object.manifest_processor.version_id
@@ -303,8 +303,8 @@ resource "aws_lambda_function" "csv_processor" {
   description       = "Lambda function."
   handler           = "lambda.lambda_handler"
   runtime           = "python2.7"
-  memory_size       = "3008"
-  timeout           = "300"
+  memory_size       = 3008
+  timeout           = 300
   s3_bucket         = data.aws_s3_bucket_object.csv_processor.bucket
   s3_key            = data.aws_s3_bucket_object.csv_processor.key
   s3_object_version = data.aws_s3_bucket_object.csv_processor.version_id
