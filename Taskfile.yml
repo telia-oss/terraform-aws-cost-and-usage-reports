@@ -107,7 +107,7 @@ tasks:
       BOLD=$(tput bold)
       NORM=$(tput sgr0)
 
-      echo "${BOLD}python code:${NORM}"
+      echo "${BOLD}python linting:${NORM}"
       if which "pylint" > /dev/null; then
         for d in $DIRECTORIES; do 
           if ! pylint $d/*.py > /dev/null 2>&1; then
@@ -135,7 +135,7 @@ tasks:
 
       for d in $DIRECTORIES; do 
         cd $d
-        echo "${BOLD} $PWD:${NORM}"
+        echo "${BOLD}$PWD:${NORM}"
 
         if ! terraform fmt -check=true -write=true -list=false -recursive=false; then
           echo "  ✗ terraform fmt" && exit $?

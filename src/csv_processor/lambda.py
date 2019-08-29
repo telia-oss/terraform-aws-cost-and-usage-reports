@@ -8,6 +8,7 @@ import pyarrow.parquet as pq
 import pyarrow as pa
 import s3fs
 
+
 def lambda_handler(event, _):
     """Lambda entry point"""
     source_path = 's3://' + event['bucket'] + '/' + event['source_key']

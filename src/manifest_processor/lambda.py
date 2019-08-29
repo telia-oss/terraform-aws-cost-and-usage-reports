@@ -11,6 +11,7 @@ from botocore.errorfactory import ClientError
 CSV_PROCESSOR_LAMBDA = os.environ.get('CSV_PROCESSOR_LAMBDA')
 GLUE_CRAWLER = os.environ.get('GLUE_CRAWLER')
 
+
 def valid_manifest_key(key):
     """Validate manifest key to make sure only top level manifests are processed"""
     result = re.search(r'\d{8}-\d{8}\/((?:\w+-)+\w+)\.json$', key)
@@ -18,12 +19,14 @@ def valid_manifest_key(key):
         return True
     return False
 
+
 def get_year_and_month(key):
     """Returns year and month from manifest key"""
     date = key.split('/')[-2]
     year = date[:4]
     month = date[4:6]
     return year, month
+
 
 def clear_s3_path(bucket, prefix):
     """Clear existing files since we create new for each run"""
@@ -33,6 +36,7 @@ def clear_s3_path(bucket, prefix):
     if 'Contents' in response:
         for obj in response['Contents']:
             s3_client.delete_object(Bucket=bucket, Key=obj['Key'])
+
 
 def process_files(bucket, prefix, report_keys):
     """Loop through all files and trigger lambda functions for each"""
@@ -54,6 +58,7 @@ def process_files(bucket, prefix, report_keys):
         )
         print('Invokation sent for file s3://' + bucket + source_key)
     return target_keys
+
 
 def lambda_handler(event, _):
     """Lambda entry point"""
