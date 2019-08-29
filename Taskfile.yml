@@ -110,7 +110,7 @@ tasks:
       echo "${BOLD}python code:${NORM}"
       if which "pylint" > /dev/null; then
         for d in $DIRECTORIES; do 
-          if ! pylint $d/*.py; then
+          if ! pylint $d/*.py > /dev/null 2>&1; then
             echo "  ✗ $d" && exit $?
           else
             echo "  √ $d"
