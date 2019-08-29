@@ -21,7 +21,7 @@ source /venv/bin/activate
 
 echo "Update and install python packages"
 pip install --upgrade pip wheel
-pip install -r source/docker/requirements.txt
+pip install -r source/requirements.txt
 
 echo "Stripping binaries"
 find $VIRTUAL_ENV/lib64/python2.7/site-packages/ -name "*.so" | xargs strip
