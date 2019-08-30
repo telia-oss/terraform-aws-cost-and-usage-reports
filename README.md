@@ -21,7 +21,9 @@ After this the database is available for query through Athena.
 
 ### Build lambda functions
 ```
-> make build
+> task build
+# If you need to force a complete rebuild:
+> task build --force
 ```
 Note that building the csv-processor requires docker. This since the lambda need several thirdparty libraries and we need to build them in a lambda compatible environment.
 
@@ -35,9 +37,9 @@ If you want to run it in the billing account you can skip creating the billing-a
 ### Upload lambda code
 The functions can then be uploaded with the following command:
 ```
-> make upload-lambda-billing-account BUCKET=my-lambda-deployment-bucket-in-billing-account
+> BUCKET=my-lambda-deployment-bucket-in-billing-account task upload-lambda-billing-account 
 
-> make upload-lambda-processing-account BUCKET=my-lambda-deployment-bucket-in-processing-account
+> BUCKET=my-lambda-deployment-bucket-in-processing-account task upload-lambda-processing-account 
 ```
 
 ### Processing account

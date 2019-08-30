@@ -1,0 +1,165 @@
+version: '2'
+
+env:
+  AWS_DEFAULT_REGION: eu-west-1
+
+tasks:
+  default:
+    cmds:
+    - task: test
+  
+  test:
+    desc: Run all tests.
+    silent: true
+    cmds:
+    - task: test-python
+    - task: test-terraform
+
+  build:
+    desc: Build all artifacts.
+    silent: true
+    cmds:
+    - task: build-environment
+    - task: build-csv-processor
+    - task: build-manifest-processor
+    - task: build-bucket-forwarder
+
+  build-environment:
+    desc: Build the lambda environment.
+    silent: true
+    env:
+      DOCKER_IMAGE: amazonlinux
+      DOCKER_TAG: 2016.09
+    cmds:
+    - echo "== Building environment =="
+    - mkdir -p dist
+    - docker run -v ${PWD}:/source -it ${DOCKER_IMAGE}:${DOCKER_TAG} /bin/bash source/docker/build.sh
+    - echo "√ Lambda environment built"
+    sources:
+    - docker/build.sh
+    generates:
+    - dist/environment.zip
+    
+  build-csv-processor:
+    desc: Build csv processor.
+    silent: true
+    cmds:
+    - echo "== Build csv-processor =="
+    - |
+      if ! test -d "${PWD}/dist"; then
+        echo "Environment not created, run 'task build-environment' first"
+        exit 1
+      fi
+    - zip -9 -j -O ${PWD}/dist/csv_processor.zip ${PWD}/dist/environment.zip src/csv_processor/lambda.py
+    - echo "√ csv processor release built"
+
+  build-manifest-processor:
+    desc: Build manifest processor.
+    silent: true
+    cmds:
+    - echo "== Build manifest-processor release =="
+    - zip -9 -j ${PWD}/dist/manifest_processor.zip src/manifest_processor/lambda.py
+    - echo "√ manifest processor release built"
+  
+  build-bucket-forwarder:
+    desc: Build bucket forwarder.
+    silent: true
+    cmds:
+    - echo "== Build bucket-forwarder =="
+    - zip -9 -j ${PWD}/dist/bucket_forwarder.zip src/bucket_forwarder/lambda.py
+    - echo "√ bucket forwarder release built"
+
+  upload-lambda-billing-account:
+    desc: Upload bucket forwarder.
+    silent: true
+    cmds:
+    - echo "== Uploading bucket_forwarder.zip =="
+    - |
+      if test -z "${BUCKET}"; then 
+        echo "BUCKET variable not set"
+        exit 1
+      fi
+    - aws s3 cp dist/bucket_forwarder.zip s3://{{.BUCKET}}/lambda/bucket_forwarder.zip
+    - echo "√ bucket_forwarder.zip uploaded"
+
+  upload-lambda-processing-account:
+    desc: Upload bucket forwarder.
+    silent: true
+    cmds:
+    - echo "== Uploading csv_processor.zip and manifest_processor.zip =="
+    - |
+      if test -z "${BUCKET}"; then 
+        echo "BUCKET variable not set"
+        exit 1
+      fi
+    - aws s3 cp dist/csv_processor.zip s3://${BUCKET}/lambda/csv_processor.zip
+    - aws s3 cp dist/manifest_processor.zip s3://${BUCKET}/lambda/manifest_processor.zip
+    - echo "√ csv_processor.zip and manifest_processor.zip uploaded"
+
+  test-python:
+    desc: Run tests for python code.
+    silent: true
+    env:
+      DIRECTORIES:
+        sh: find . -type f -name '*.py' -path "./src/*" -exec dirname {} \; | sort -u
+    cmds:
+    - |
+      BOLD=$(tput bold)
+      NORM=$(tput sgr0)
+
+      echo "${BOLD}python linting:${NORM}"
+      if which "pylint" > /dev/null; then
+        for d in $DIRECTORIES; do 
+          if ! pylint $d/*.py > /dev/null 2>&1; then
+            echo "  ✗ $d" && exit $?
+          else
+            echo "  √ $d"
+          fi
+        done
+      else
+        echo "  ⚠ skipping (pylint is not installed)"
+      fi
+
+  test-terraform:
+    desc: Run tests for all terraform directories.
+    silent: true
+    env:
+      DIRECTORIES:
+        sh: find . -type f -name '*.tf' -not -path "**/.terraform/*" -exec dirname {} \; | sort -u
+    cmds:
+    - |
+      BOLD=$(tput bold)
+      NORM=$(tput sgr0)
+
+      CWD=$PWD
+
+      for d in $DIRECTORIES; do 
+        cd $d
+        echo "${BOLD}$PWD:${NORM}"
+
+        if ! terraform fmt -check=true -write=true -list=false -recursive=false; then
+          echo "  ✗ terraform fmt" && exit $?
+        else
+          echo "  √ terraform fmt"
+        fi
+
+        if ! terraform init -backend=false -input=false -get=true -get-plugins=true -no-color > /dev/null; then
+          echo "  ✗ terraform init" && exit $?
+        else
+          echo "  √ terraform init"
+        fi
+
+        if ! terraform validate > /dev/null; then
+          echo "  ✗ terraform validate" && exit $?
+        else
+          echo "  √ terraform validate"
+        fi
+
+        cd $CWD
+      done
+  
+  clean:
+    desc: Clean the dist folder.
+    cmds:
+    - |
+      rm -rf dist
