@@ -2,7 +2,12 @@
 **/.terraform
 **/*.tfstate*
 crash.log
-dist
 
-# InteliJ IDE Files
+# IntelliJ IDE
 .idea/
+
+# Taskfile
+.task/
+
+# Artifacts
+dist

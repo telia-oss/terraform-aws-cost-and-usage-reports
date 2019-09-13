@@ -1,16 +1,17 @@
 version: '2'
 
 env:
+  TERM: screen-256color
+  GO111MODULE: on
   AWS_DEFAULT_REGION: eu-west-1
 
 tasks:
   default:
     cmds:
     - task: test
-  
+
   test:
-    desc: Run all tests.
-    silent: true
+    desc: Run tests.
     cmds:
     - task: test-python
     - task: test-terraform
@@ -125,7 +126,7 @@ tasks:
     silent: true
     env:
       DIRECTORIES:
-        sh: find . -type f -name '*.tf' -not -path "**/.terraform/*" -exec dirname {} \; | sort -u
+        sh: find . -type f -name '*.tf' -not -path "**/.terraform/*" -print0 | xargs -0I {} dirname {} | sort -u
     cmds:
     - |
       BOLD=$(tput bold)
@@ -137,7 +138,7 @@ tasks:
         cd $d
         echo "${BOLD}$PWD:${NORM}"
 
-        if ! terraform fmt -check=true -write=true -list=false -recursive=false; then
+        if ! terraform fmt -check=true -list=false -recursive=false; then
           echo "  ✗ terraform fmt" && exit $?
         else
           echo "  √ terraform fmt"
@@ -157,7 +158,7 @@ tasks:
 
         cd $CWD
       done
-  
+
   clean:
     desc: Clean the dist folder.
     cmds:
