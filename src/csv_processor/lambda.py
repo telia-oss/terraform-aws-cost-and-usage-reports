@@ -7,7 +7,43 @@ import pandas as pd
 import pyarrow.parquet as pq
 import pyarrow as pa
 import s3fs
+import re
 
+def dedup_columns(oldColumns):
+    old_new_mapping = {}
+    duplicate_check_dict = {}
+
+    for old_column_val in oldColumns:
+        old_split = old_column_val.name.split(':')
+        old_column_val_updated = old_column_val.name
+        if len(old_split) > 1:
+            sensitive_val = old_split[1]
+            update_substr = sensitive_val
+            if sensitive_val.islower():
+                update_substr = update_substr +'_lower'
+            elif sensitive_val.isupper():
+                update_substr = update_substr+'_upper'
+            else :
+                update_substr = update_substr+'_camel'
+            old_column_val_updated = old_split[0]+':'+update_substr
+        lower_case_val = re.sub('([A-Z]+)', r'_\1',old_column_val_updated).lower()
+        lower_case_val = re.sub('[^0-9a-zA-Z]+', '_', lower_case_val)
+        duplicate_check = duplicate_check_dict.get(lower_case_val)
+        if duplicate_check == None:
+            duplicate_check_dict[lower_case_val] = 1
+            old_new_mapping[old_column_val.name] = lower_case_val
+        else :
+            duplicate_check_dict[lower_case_val] = duplicate_check + 1
+            print('Found duplicate column: ',old_column_val.name,'->',lower_case_val)
+
+    
+    #Get list of new columns   
+    new_columns = []
+    for old_column_val in oldColumns:
+        new_columns.append(pa.field(old_new_mapping[old_column_val.name], pa.string()))
+        print(old_column_val.name,'->',old_new_mapping[old_column_val.name])
+    
+    return new_columns
 
 def lambda_handler(event, _):
     """Lambda entry point"""
@@ -53,8 +89,11 @@ def lambda_handler(event, _):
                 # Fetch columns from header, hardcodes type to string
                 columns = [pa.field(column, pa.string()) for column in chunk.columns]
 
+                # Dedup column names
+                dd_columns = dedup_columns(columns)
+
                 # Generate schema from columns
-                parquet_schema = pa.schema(columns)
+                parquet_schema = pa.schema(dd_columns)
 
                 # Open a writer to S3
                 parquet_writer = pq.ParquetWriter(target_file, parquet_schema, compression='snappy')
