@@ -9,11 +9,11 @@ import pyarrow as pa
 import s3fs
 import re
 
-def dedup_columns(oldColumns):
+def dedup_columns(old_columns):
     old_new_mapping = {}
     duplicate_check_dict = {}
 
-    for old_column_val in oldColumns:
+    for old_column_val in old_columns:
         old_split = old_column_val.name.split(':')
         old_column_val_updated = old_column_val.name
         if len(old_split) > 1:
@@ -39,7 +39,7 @@ def dedup_columns(oldColumns):
     
     #Get list of new columns   
     new_columns = []
-    for old_column_val in oldColumns:
+    for old_column_val in old_columns:
         new_columns.append(pa.field(old_new_mapping[old_column_val.name], pa.string()))
         print(old_column_val.name,'->',old_new_mapping[old_column_val.name])
     

@@ -34,7 +34,7 @@ tasks:
     cmds:
     - echo "== Building environment =="
     - mkdir -p dist
-    - docker run -v ${PWD}:/source -t ${DOCKER_IMAGE}:${DOCKER_TAG} /bin/bash source/docker/build.sh
+    - docker run --rm -v ${PWD}:/source -t ${DOCKER_IMAGE}:${DOCKER_TAG} /bin/bash source/docker/build.sh
     - echo "√ Lambda environment built"
     sources:
     - docker/build.sh
