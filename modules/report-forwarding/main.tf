@@ -61,6 +61,8 @@ resource "aws_s3_bucket_notification" "forward_bucket_notification" {
 
 resource "aws_sns_topic" "bucket_forwarder_topic" {
   name = "${var.prefix}-topic"
+
+  tags = var.tags  
 }
 
 resource "aws_sns_topic_policy" "default" {
@@ -129,6 +131,8 @@ resource "aws_lambda_function" "bucket_forwarder" {
 resource "aws_iam_role" "bucket_forwarder" {
   name               = "${var.prefix}-bucket-forwarder-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.bucket_forwarder_assume.json
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "bucket_forwarder_assume" {
