@@ -1,5 +1,7 @@
 ## AWS cost and usage reports
 
+This module is archived and deprecated
+
 [![workflow](https://github.com/telia-oss/terraform-aws-cost-and-usage-reports/workflows/workflow/badge.svg)](https://github.com/telia-oss/terraform-aws-cost-and-usage-reports/actions)
 
 AWS provides detailed cost and usage reports in csv format to the master account. This service takes these reports and converts them from csv to parquet (columnar storage format), sets up a AWS Glue Crawler and Database to allow quick searches through AWS Athena.
